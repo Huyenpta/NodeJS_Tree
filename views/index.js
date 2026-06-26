@@ -1,90 +1,90 @@
 const getHeader = require('./partials/header');
 const getFooter = require('./partials/footer');
 
-function renderIndex(trees = [], errors = null) {
-    
+function renderIndex(trees = [], editingTree = null, errors = null) {
     let errorHtml = '';
     if (errors && errors.length > 0) {
-        errorHtml = `
-            <div class="alert alert-danger">
-                <ul class="mb-0">
-                    ${errors.map(err => `<li>${err}</li>`).join('')}
-                </ul>
-            </div>
-        `;
+        errorHtml = `<div class="alert alert-danger"><ul class="mb-0">${errors.map(err => `<li>${err}</li>`).join('')}</ul></div>`;
     }
 
-    
     let tableRows = '';
     if (trees && trees.length > 0) {
         tableRows = trees.map((tree, index) => `
             <tr>
                 <td class="fw-bold text-muted">${index + 1}</td>
-                <td class="fw-bold text-success">${tree.treename}</td>
+                <td class="fw-bold">${tree.treename}</td>
                 <td>
-                    <img src="${tree.image}" alt="${tree.treename}" class="img-thumbnail shadow-sm" style="width: 70px; height: 70px; object-fit: cover;">
+                    <img src="${tree.image || 'https://dummyimage.com/70x70/e2e8e2/516e51.png&text=No+Img'}" alt="${tree.treename}" class="img-thumbnail" style="width: 70px; height: 70px; object-fit: cover;">
                 </td>
-                <td><p class="mb-0 text-secondary" style="font-size: 0.9rem; line-height: 1.4;">${tree.description}</p></td>
+                <td><p class="mb-0" style="font-size: 0.9rem; line-height: 1.4;">${tree.description}</p></td>
+                <td class="text-center">
+                    <a href="/edit/${tree._id}" class="text-primary me-3" title="Edit"><i class="fas fa-pen"></i></a>
+                    <a href="/delete/${tree._id}" class="text-danger" title="Delete" onclick="return confirm('Are you sure you want to delete this tree?');"><i class="far fa-trash-alt"></i></a>
+                </td>
             </tr>
         `).join('');
     } else {
-        tableRows = `<tr><td colspan="4" class="text-center py-4 text-muted">There are no trees in the system yet.</td></tr>`;
+        tableRows = `<tr><td colspan="5" class="text-center py-4 text-muted">No data available.</td></tr>`;
     }
 
+    const actionUrl = editingTree ? `/edit/${editingTree._id}` : '/add';
+    const nameVal = editingTree ? editingTree.treename : '';
+    const descVal = editingTree ? editingTree.description : '';
+    const btnSubmit = editingTree ? 'Update' : 'Add';
+    const btnReset = editingTree
+        ? `<a href="/" class="btn px-4 text-white fw-bold" style="background-color: #ba6d68; text-decoration: none;">Cancel</a>`
+        : `<button type="reset" class="btn px-4 text-white fw-bold" style="background-color: #ba6d68;">Reset</button>`;
+
+    const defaultImg = "https://dummyimage.com/400x400/e2e8e2/516e51.png&text=Preview+Image";
+    const displayImg = (editingTree && editingTree.image) ? editingTree.image : defaultImg;
+
     const mainContent = `
-    <div class="row">
-        <div class="col-md-5 mb-4">
-            <div class="card shadow-sm border-0 bg-white">
-                <div class="card-header bg-success text-white fw-bold py-3">
-                    <i class="fas fa-plus-circle me-2"></i>Add New Tree
-                </div>
-                <div class="card-body p-4">
-                    ${errorHtml}
-                    <form action="/add" method="POST">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Tree Name</label>
-                            <input type="text" name="treename" class="form-control" placeholder="Enter tree name...">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Description</label>
-                            <textarea name="description" class="form-control" rows="4" placeholder="Enter detailed description..."></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold">Image URL</label>
-                            <input type="text" name="image" class="form-control" placeholder="Image URL...">
-                        </div>
-                        <div class="d-flex gap-2 pt-2">
-                            <button type="submit" class="btn btn-success flex-grow-1 py-2 fw-bold">Add</button>
-                            <button type="reset" class="btn btn-danger px-4 py-2 fw-bold">Reset</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
+    <div class="row mb-5">
+        <div class="col-md-5 d-flex align-items-center justify-content-center">
+            <img src="${displayImg}" alt="Preview" class="img-fluid rounded shadow-sm" style="max-height: 350px; width: 100%; object-fit: cover;">
         </div>
+
         <div class="col-md-7">
-            <div class="card shadow-sm border-0 bg-white">
-                <div class="card-header bg-dark text-white fw-bold py-3">
-                    <i class="fas fa-leaf me-2"></i>Tree List in the Shop
+            <h2 class="text-success fst-italic mb-3" style="color: #799b79 !important;">Tree Shop</h2>
+            ${errorHtml}
+            <form action="${actionUrl}" method="POST" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label class="form-label text-muted small mb-1">Tree Name</label>
+                    <input type="text" name="treename" class="form-control" placeholder="Enter tree name..." value="${nameVal}">
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive">
-                        <table class="table table-hover align-middle mb-0">
-                            <thead class="table-light">
-                                <tr>
-                                    <th style="width: 8%">ID</th>
-                                    <th style="width: 25%">Name</th>
-                                    <th style="width: 20%">Image</th>
-                                    <th style="width: 47%">Description</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${tableRows}
-                            </tbody>
-                        </table>
+                <div class="mb-3">
+                    <label class="form-label text-muted small mb-1">Description</label>
+                    <textarea name="description" class="form-control" rows="3" placeholder="Enter description...">${descVal}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-muted small mb-1">Image ${editingTree ? '(Leave blank to keep the current image)' : ''}</label>
+                    <div class="input-group">
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
                 </div>
-            </div>
+                <div class="d-flex justify-content-end gap-2 mt-4">
+                    <button type="submit" class="btn px-4 text-white fw-bold" style="background-color: #83a883;">${btnSubmit}</button>
+                    ${btnReset}
+                </div>
+            </form>
         </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead style="background-color: #83a883; color: white;">
+                <tr>
+                    <th style="width: 5%">Id</th>
+                    <th style="width: 20%">Name</th>
+                    <th style="width: 15%">Image</th>
+                    <th style="width: 50%">Description</th>
+                    <th style="width: 10%" class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${tableRows}
+            </tbody>
+        </table>
     </div>
     `;
 
