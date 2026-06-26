@@ -2,7 +2,7 @@ function getFooter() {
     return `
         </div> <footer class="bg-secondary text-white text-center py-3 mt-5 shadow-lg">
             <div class="container">
-                <p class="mb-1 fw-semibold">Số 8, Tôn Thất Thuyết, Cầu Giấy, Hà Nội</p>
+                <p class="mb-1 fw-semibold">No. 8, Ton That Thuyet Street, Cau Giay District, Hanoi</p>
                 <small>&copy; 2026 Tree Shop. All rights reserved.</small>
             </div>
         </footer>

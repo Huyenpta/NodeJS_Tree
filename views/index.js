@@ -2,7 +2,7 @@ const getHeader = require('./partials/header');
 const getFooter = require('./partials/footer');
 
 function renderIndex(trees = [], errors = null) {
-    // Xử lý chuỗi hiển thị lỗi validate nếu có
+    
     let errorHtml = '';
     if (errors && errors.length > 0) {
         errorHtml = `
@@ -14,7 +14,7 @@ function renderIndex(trees = [], errors = null) {
         `;
     }
 
-    // Xử lý danh sách cây đổ ra bảng
+    
     let tableRows = '';
     if (trees && trees.length > 0) {
         tableRows = trees.map((tree, index) => `
@@ -28,7 +28,7 @@ function renderIndex(trees = [], errors = null) {
             </tr>
         `).join('');
     } else {
-        tableRows = `<tr><td colspan="4" class="text-center py-4 text-muted">Chưa có dữ liệu cây nào trong hệ thống.</td></tr>`;
+        tableRows = `<tr><td colspan="4" class="text-center py-4 text-muted">There are no trees in the system yet.</td></tr>`;
     }
 
     const mainContent = `
@@ -36,22 +36,22 @@ function renderIndex(trees = [], errors = null) {
         <div class="col-md-5 mb-4">
             <div class="card shadow-sm border-0 bg-white">
                 <div class="card-header bg-success text-white fw-bold py-3">
-                    <i class="fas fa-plus-circle me-2"></i>Thêm Cây Mới
+                    <i class="fas fa-plus-circle me-2"></i>Add New Tree
                 </div>
                 <div class="card-body p-4">
                     ${errorHtml}
                     <form action="/add" method="POST">
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Tree Name</label>
-                            <input type="text" name="treename" class="form-control" placeholder="Nhập tên cây...">
+                            <input type="text" name="treename" class="form-control" placeholder="Enter tree name...">
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Description</label>
-                            <textarea name="description" class="form-control" rows="4" placeholder="Nhập mô tả chi tiết..."></textarea>
+                            <textarea name="description" class="form-control" rows="4" placeholder="Enter detailed description..."></textarea>
                         </div>
                         <div class="mb-3">
                             <label class="form-label fw-semibold">Image URL</label>
-                            <input type="text" name="image" class="form-control" placeholder="URL ảnh...">
+                            <input type="text" name="image" class="form-control" placeholder="Image URL...">
                         </div>
                         <div class="d-flex gap-2 pt-2">
                             <button type="submit" class="btn btn-success flex-grow-1 py-2 fw-bold">Add</button>
@@ -64,7 +64,7 @@ function renderIndex(trees = [], errors = null) {
         <div class="col-md-7">
             <div class="card shadow-sm border-0 bg-white">
                 <div class="card-header bg-dark text-white fw-bold py-3">
-                    <i class="fas fa-leaf me-2"></i>Danh Sách Cây Trong Cửa Hàng
+                    <i class="fas fa-leaf me-2"></i>Tree List in the Shop
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">

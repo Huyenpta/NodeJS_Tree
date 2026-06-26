@@ -5,11 +5,11 @@ function renderAbout() {
     const htmlContent = `
         <div class="card p-5 shadow-sm text-center bg-white">
             <h1 class="display-4 text-success fw-bold mb-3">About Me</h1>
-            <p class="lead">Chào mừng bạn đến với trang giới thiệu của tôi!</p>
-            <p>Đây là bài thi thực hành môn <strong>Practice - Essentials of NodeJS (SET01)</strong>.</p>
+            <p class="lead">Welcome to my introduction page!</p>
+            <p>This is the practical exam for the <strong>Practice - Essentials of NodeJS (SET01)</strong> course.</p>
             <hr class="my-4">
-            <p class="text-muted">Học viên: Trịnh Quang H...</p>
-            <a href="/" class="btn btn-success px-4 py-2 mt-2"><i class="fas fa-arrow-left me-2"></i>Quay lại Cửa hàng</a>
+            <p class="text-muted">Student: Pham Thi Anh Huyen</p> 
+            <a href="/" class="btn btn-success px-4 py-2 mt-2"><i class="fas fa-arrow-left me-2"></i>Back to Shop</a>
         </div>
     `;
     return getHeader("About Me") + htmlContent + getFooter();
